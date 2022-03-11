@@ -135,7 +135,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4650525871734626883}
   - component: {fileID: 8455741619979697175}
-  - component: {fileID: 8968335439175678653}
+  - component: {fileID: 8069701530194545770}
   m_Layer: 0
   m_Name: Rifle
   m_TagString: Untagged
@@ -172,7 +172,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponItem: {fileID: 11400000, guid: feb8a078df44da14a8e0fa2eca89be98, type: 2}
---- !u!114 &8968335439175678653
+--- !u!114 &8069701530194545770
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -181,11 +181,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 4650525871734626882}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62672096979fc1941b9890194b42570e, type: 3}
+  m_Script: {fileID: 11500000, guid: fd114a11bf810f74e9397c0d3842fc8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rpm: 10000
+  rpm: 600
   firePoint: {fileID: 2755962029197742045}
+  bulletTemplate: {fileID: 2037635922568719703, guid: 23cdfd93bf17bb44fa2526ead49c83fa, type: 3}
 --- !u!1 &6459002242657775769
 GameObject:
   m_ObjectHideFlags: 0

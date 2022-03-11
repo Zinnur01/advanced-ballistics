@@ -2,13 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WeaponShootingSystem : MonoBehaviour
+public abstract class WeaponShootingSystem : MonoBehaviour
 {
     [SerializeField]
-    private int rpm = 300;
+    protected int rpm = 300;
 
     [SerializeField]
-    private Transform firePoint;
+    protected Transform firePoint;
 
     // Stored required properties.
     private float fireDelay;
@@ -25,14 +25,10 @@ public class WeaponShootingSystem : MonoBehaviour
         {
             lastShootTime = Time.time;
             Shoot();
-            Debug.DrawRay(firePoint.position, firePoint.forward * float.MaxValue, Color.red, 10);
         }
     }
 
-    protected virtual void Shoot()
-    {
-
-    }
+    protected abstract void Shoot();
 
     private float RPM2Delay(float rpm)
     {

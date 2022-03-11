@@ -13,6 +13,12 @@ public class CameraMovement : MonoBehaviour
     // Stored required properties.
     private float yAxis;
 
+    private void Start()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
+
     private void Update()
     {
         float x = Input.GetAxis("Mouse X") * sensetivity.x * Time.deltaTime;
