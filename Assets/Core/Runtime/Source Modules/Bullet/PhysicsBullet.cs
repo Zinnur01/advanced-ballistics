@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(SphereCollider))]
 public class PhysicsBullet : PoolObject
 {
     [SerializeField]
@@ -29,12 +28,19 @@ public class PhysicsBullet : PoolObject
     private Vector3 velocity;
 
     private Vector3 lastPosition;
+    private Collider collider = null;
 
     private void OnEnable()
     {
         lastPosition = transform.position;
     }
 
+    public static bool IsInside(Collider c, Vector3 point)
+    {
+        Vector3 closest = c.ClosestPoint(point);
+        // Because closest=point if point is inside - not clear from docs I feel
+        return closest == point;
+    }
 
     private void FixedUpdate()
     {
@@ -43,18 +49,21 @@ public class PhysicsBullet : PoolObject
         //velocity += reflection * airResistance * Time.fixedDeltaTime;
 
         velocity += Physics.gravity * Time.fixedDeltaTime;
-
-        if (Physics.Linecast(lastPosition, transform.position, out RaycastHit hitInfo))
-        {
-            PoolManager.Instance.CreateOrPop<Decal>(decalTemplate, hitInfo.point, Quaternion.LookRotation(-hitInfo.normal, Vector3.up));
-            transform.position = hitInfo.point;
-            velocity = Vector3.Reflect(velocity, hitInfo.normal);
-            //Push();
-        }
-
         transform.Translate(velocity * Time.fixedDeltaTime, Space.World);
 
-        Debug.DrawLine(lastPosition, transform.position, Color.red, 5f);
+        if (lastPosition != Vector3.zero)
+        {
+            if (Physics.Linecast(lastPosition, transform.position, out RaycastHit hitInfo))
+            {
+                collider = hitInfo.collider;
+                PoolManager.Instance.CreateOrPop<Decal>(decalTemplate, hitInfo.point, Quaternion.LookRotation(-hitInfo.normal, Vector3.up));
+                transform.position = hitInfo.point;
+                velocity = Vector3.Reflect(velocity, hitInfo.normal);
+                //Push();
+            }
+
+            Debug.DrawLine(lastPosition, transform.position, Color.red, 5f);
+        }
 
         lastPosition = transform.position;
     }
@@ -68,4 +77,24 @@ public class PhysicsBullet : PoolObject
     {
         velocity = vector * initialSpeed;
     }
+}
+
+public class DensityMaterial : MonoBehaviour
+{
+    [SerializeField]
+    private Density density;
+}
+
+public class Density : ScriptableObject
+{
+    [SerializeField]
+    private float density;
+
+    [SerializeField]
+    private float temperature;
+}
+
+public class Atmosphere
+{
+
 }
