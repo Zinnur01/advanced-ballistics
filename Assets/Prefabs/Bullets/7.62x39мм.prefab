@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3304604141459014183}
   - component: {fileID: 2037635922568719703}
   - component: {fileID: -7001652215049990596}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: "7.62x39\u043C\u043C"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -96,10 +96,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   initialSpeed: 100
-  impulse: 1.25
-  mass: 1
-  airResistance: 1
+  penetration: 0.01
   decalTemplate: {fileID: 9146471034583258201, guid: 5dc87830aa2c81e42815648e8c558bb9, type: 3}
+  cullingLayer:
+    serializedVersion: 2
+    m_Bits: 1
   velocity: {x: 0, y: 0, z: 0}
 --- !u!114 &-7001652215049990596
 MonoBehaviour:

@@ -9,18 +9,21 @@ public class PhysicsBullet : PoolObject
     [Suffix("Ï/Ò")]
     private int initialSpeed = 715;
 
-    [SerializeField]
-    [Suffix("Í„Ò*Ò")]
-    private float impulse = 1.25f;
+    //[SerializeField]
+    //[Suffix("Í„Ò*Ò")]
+    //private float impulse = 1.25f;
+
+    //[SerializeField]
+    //private float mass = 0.008f;
 
     [SerializeField]
-    private float mass = 0.008f;
-
-    [SerializeField]
-    private float airResistance = 0.1f;
+    private float penetration = 0.01f;
 
     [SerializeField]
     private PoolObject decalTemplate;
+
+    [SerializeField]
+    private LayerMask cullingLayer;
 
     // Stored required properties.
     [SerializeField]
@@ -28,49 +31,50 @@ public class PhysicsBullet : PoolObject
     private Vector3 velocity;
 
     private Vector3 lastPosition;
-    private Collider collider = null;
 
-    private void OnEnable()
+    private void Start()
     {
-        lastPosition = transform.position;
-    }
-
-    public static bool IsInside(Collider c, Vector3 point)
-    {
-        Vector3 closest = c.ClosestPoint(point);
-        // Because closest=point if point is inside - not clear from docs I feel
-        return closest == point;
+        penetration += 0.001f;
     }
 
     private void FixedUpdate()
     {
-        //Vector3 reflection = Vector3.Reflect(velocity, -Vector3.ProjectOnPlane(velocity, Vector3.up).normalized);
-        //Debug.DrawRay(transform.position, reflection * airResistance);
-        //velocity += reflection * airResistance * Time.fixedDeltaTime;
+        lastPosition = transform.position;
 
         velocity += Physics.gravity * Time.fixedDeltaTime;
         transform.Translate(velocity * Time.fixedDeltaTime, Space.World);
 
-        if (lastPosition != Vector3.zero)
+        if (Physics.Linecast(lastPosition, transform.position, out RaycastHit hitInfo, cullingLayer))
         {
-            if (Physics.Linecast(lastPosition, transform.position, out RaycastHit hitInfo))
+            CreateDecal(hitInfo);
+            Debug.DrawLine(lastPosition, transform.position, Color.red, 10);
+
+            if (Physics.Linecast(hitInfo.point + velocity.normalized * penetration, lastPosition, out RaycastHit penetrationHitInfo, cullingLayer))
             {
-                collider = hitInfo.collider;
-                PoolManager.Instance.CreateOrPop<Decal>(decalTemplate, hitInfo.point, Quaternion.LookRotation(-hitInfo.normal, Vector3.up));
-                transform.position = hitInfo.point;
-                velocity = Vector3.Reflect(velocity, hitInfo.normal);
-                //Push();
+                CreateDecal(penetrationHitInfo);
+                Debug.DrawLine(hitInfo.point + velocity.normalized * penetration, lastPosition, Color.green, 10);
+            }
+            else
+            {
+                Push();
             }
 
-            Debug.DrawLine(lastPosition, transform.position, Color.red, 5f);
+            //transform.position = hitInfo.point;
+            //float dot = 1f - Vector3.Dot(hitInfo.normal, -velocity.normalized);
+            //velocity = Vector3.Reflect(velocity, hitInfo.normal) * dot;
+            //if (velocity.sqrMagnitude < 1)
+            //{
+            //    Push();
+            //}
         }
-
-        lastPosition = transform.position;
     }
 
-    protected override void OnBeforePush()
+    private void CreateDecal(RaycastHit hitInfo)
     {
-        lastPosition = Vector3.zero;
+        if (velocity.sqrMagnitude > 100)
+        {
+            PoolManager.Instance.CreateOrPop<Decal>(decalTemplate, hitInfo.point, Quaternion.LookRotation(-hitInfo.normal, Vector3.up));
+        }
     }
 
     public void ApplyVelocity(Vector3 vector)
