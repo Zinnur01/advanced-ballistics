@@ -56,16 +56,14 @@ public class PhysicsBullet : PoolObject
             }
             else
             {
-                Push();
+                transform.position = hitInfo.point;
+                float dot = 1f - Vector3.Dot(hitInfo.normal, -velocity.normalized);
+                velocity = Vector3.Reflect(velocity, hitInfo.normal) * dot;
+                if (velocity.sqrMagnitude < 1)
+                {
+                    Push();
+                }
             }
-
-            //transform.position = hitInfo.point;
-            //float dot = 1f - Vector3.Dot(hitInfo.normal, -velocity.normalized);
-            //velocity = Vector3.Reflect(velocity, hitInfo.normal) * dot;
-            //if (velocity.sqrMagnitude < 1)
-            //{
-            //    Push();
-            //}
         }
     }
 
