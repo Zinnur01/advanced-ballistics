@@ -19,6 +19,7 @@ public static class PhysicsExtension
                 Physics.Raycast(hitInfo.inHit.point + direction * (hitInfo.inHit.collider.bounds.size.magnitude + 0.001f), -direction, out hitInfo.outHit);
             }
 
+
             hitInfo.gap = Vector3.Distance(hitInfo.inHit.point, hitInfo.outHit.point);
 
             return true;

@@ -11,6 +11,6 @@ public class PhysicsSurfaceAsset : ScriptableObject
 
     public float GetStrength()
     {
-        return strength * 100f;
+        return strength;
     }
 }
