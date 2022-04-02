@@ -44,7 +44,17 @@ public class PhysicsBullet : PoolObject
             transform.position = bothHitInfo.inHit.point;
             Debug.DrawLine(lastPosition, transform.position, GetVelocityColor(), 10);
 
-            Through(bothHitInfo);
+            float angle = Vector3.Angle(bothHitInfo.inHit.normal, velocity) - 90;
+            Debug.Log(angle);
+
+            if (angle > 60)
+            {
+                Through(bothHitInfo);
+            }
+            else
+            {
+                Ricochet(bothHitInfo);
+            }
         }
         else
         {
@@ -75,6 +85,12 @@ public class PhysicsBullet : PoolObject
         {
             Push();
         }
+    }
+
+    private void Ricochet(RaycastBothHit bothHit)
+    {
+        transform.position = bothHit.inHit.point;
+        velocity = Vector3.Reflect(velocity, bothHit.inHit.normal);
     }
 
     private void CreateDecal(RaycastHit hitInfo)
