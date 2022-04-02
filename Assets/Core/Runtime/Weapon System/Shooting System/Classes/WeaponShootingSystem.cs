@@ -8,7 +8,7 @@ public abstract class WeaponShootingSystem : MonoBehaviour
     protected int rpm = 300;
 
     [SerializeField]
-    protected Transform firePoint;
+    private Transform firePoint;
 
     // Stored required properties.
     private float fireDelay;
@@ -24,11 +24,11 @@ public abstract class WeaponShootingSystem : MonoBehaviour
         if (Input.GetMouseButton(0) && lastShootTime + fireDelay < Time.time)
         {
             lastShootTime = Time.time;
-            Shoot();
+            Shoot(firePoint.position, firePoint.forward);
         }
     }
 
-    protected abstract void Shoot();
+    protected abstract void Shoot(Vector3 origin, Vector3 direction);
 
     private float RPM2Delay(float rpm)
     {
