@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5272718302170350295}
   - component: {fileID: 1621371917128414667}
   - component: {fileID: 4258052452161163178}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -93,7 +93,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4827020062446927633}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Weapon Hinge
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -126,7 +126,7 @@ GameObject:
   - component: {fileID: 2314108240101670190}
   - component: {fileID: 4510106538369912148}
   - component: {fileID: 867598823604068650}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Capsule
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -223,7 +223,7 @@ GameObject:
   - component: {fileID: 3794995338246198524}
   - component: {fileID: 722734452629990552}
   - component: {fileID: 5235626902569134604}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -305,6 +305,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponHinge: {fileID: 4827020062446927633}
   items:
+  - {fileID: 11400000, guid: 4755f338e87a65e47b067592b17c5449, type: 2}
   - {fileID: 11400000, guid: feb8a078df44da14a8e0fa2eca89be98, type: 2}
 --- !u!1 &7311484630114415060
 GameObject:
@@ -315,7 +316,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3454606047953055714}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Camera Hinge
   m_TagString: Untagged
   m_Icon: {fileID: 0}

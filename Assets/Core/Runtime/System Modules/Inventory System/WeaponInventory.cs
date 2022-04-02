@@ -11,7 +11,8 @@ public class WeaponInventory : MonoBehaviour
     [SerializeField]
     private List<WeaponItem> items = new List<WeaponItem>();
 
-    private WeaponItem equippedWeapons;
+    private int equippedIndex;
+    private GameObject weaponObject;
 
     private void Awake()
     {
@@ -21,18 +22,24 @@ public class WeaponInventory : MonoBehaviour
         }
     }
 
-    private void Equip(WeaponItem item)
+    private void Update()
     {
-        RemoveChildren(weaponHinge);
-        equippedWeapons = item;
-        Instantiate(item.GetWeaponIdentifier(), weaponHinge);
+        float scroll = Input.GetAxis("Mouse ScrollWheel");
+
+        if (scroll != 0)
+        {
+            equippedIndex = (int)Mathf.PingPong(equippedIndex + Mathf.Sign(scroll), items.Count);
+            Equip(items[equippedIndex]);
+        }
     }
 
-    private void RemoveChildren(Transform parent)
+    private void Equip(WeaponItem item)
     {
-        foreach (Transform child in parent)
+        if (weaponObject != null)
         {
-            Destroy(child);
+            Destroy(weaponObject);
         }
+
+        weaponObject = Instantiate(item.GetWeaponIdentifier(), weaponHinge).gameObject;
     }
 }

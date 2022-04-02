@@ -45,8 +45,6 @@ public class PhysicsBullet : PoolObject
             Debug.DrawLine(lastPosition, transform.position, GetVelocityColor(), 10);
 
             float angle = Vector3.Angle(bothHitInfo.inHit.normal, velocity) - 90;
-            Debug.Log(angle);
-
             if (angle > 60)
             {
                 Through(bothHitInfo);
