@@ -9,21 +9,14 @@ public class PhysicsBullet : PoolObject
     [Suffix("Ï/Ò")]
     private int initialSpeed = 715;
 
-    //[SerializeField]
-    //[Suffix("Í„Ò*Ò")]
-    //private float impulse = 1.25f;
-
-    //[SerializeField]
-    //private float mass = 0.008f;
-
-    [SerializeField]
-    private float penetration = 0.01f;
-
     [SerializeField]
     private PoolObject decalTemplate;
 
     [SerializeField]
     private LayerMask cullingLayer;
+
+    [SerializeField]
+    private Gradient gradient;
 
     // Stored required properties.
     [SerializeField]
@@ -32,11 +25,6 @@ public class PhysicsBullet : PoolObject
 
     private Vector3 lastPosition;
 
-    private void Start()
-    {
-        penetration += 0.001f;
-    }
-
     private void FixedUpdate()
     {
         lastPosition = transform.position;
@@ -44,27 +32,67 @@ public class PhysicsBullet : PoolObject
         velocity += Physics.gravity * Time.fixedDeltaTime;
         transform.Translate(velocity * Time.fixedDeltaTime, Space.World);
 
-        if (Physics.Linecast(lastPosition, transform.position, out RaycastHit hitInfo, cullingLayer))
+        if (PhysicsExtension.LinecastBoth(lastPosition, transform.position, out RaycastBothHit bothHitInfo))
         {
-            CreateDecal(hitInfo);
-            Debug.DrawLine(lastPosition, transform.position, Color.red, 10);
+            CreateDecal(bothHitInfo.inHit);
+            transform.position = bothHitInfo.inHit.point;
+            Debug.DrawLine(lastPosition, transform.position, GetVelocityColor(), 10);
 
-            if (Physics.Linecast(hitInfo.point + velocity.normalized * penetration, lastPosition, out RaycastHit penetrationHitInfo, cullingLayer))
+            PhysicsSurface surface = bothHitInfo.inHit.transform.GetComponent<PhysicsSurface>();
+            if (surface != null)
             {
-                CreateDecal(penetrationHitInfo);
-                Debug.DrawLine(hitInfo.point + velocity.normalized * penetration, lastPosition, Color.green, 10);
-            }
-            else
-            {
-                transform.position = hitInfo.point;
-                float dot = 1f - Vector3.Dot(hitInfo.normal, -velocity.normalized);
-                velocity = Vector3.Reflect(velocity, hitInfo.normal) * dot;
-                if (velocity.sqrMagnitude < 1)
+                float neededBulletPenetrationForce = PenetrationStrength(bothHitInfo.gap, surface.GetSurface().GetStrength());
+
+                if (velocity.magnitude > neededBulletPenetrationForce)
+                {
+                    CreateDecal(bothHitInfo.outHit);
+                    transform.position = bothHitInfo.outHit.point;
+                    velocity += -velocity.normalized * neededBulletPenetrationForce;
+                }
+                else
                 {
                     Push();
                 }
             }
+            else
+            {
+                Push();
+            }
         }
+        else
+        {
+            Debug.DrawLine(lastPosition, transform.position, GetVelocityColor(), 10);
+        }
+        //if (Physics.Linecast(lastPosition, transform.position, out RaycastHit hitInfo, cullingLayer))
+        //{
+        //    CreateDecal(hitInfo);
+        //    Debug.DrawLine(lastPosition, transform.position, Color.red, 10);
+
+        //    if (Physics.Linecast(hitInfo.point + velocity.normalized * penetration, lastPosition, out RaycastHit penetrationHitInfo, cullingLayer))
+        //    {
+        //        CreateDecal(penetrationHitInfo);
+        //        Debug.DrawLine(hitInfo.point + velocity.normalized * penetration, lastPosition, Color.green, 10);
+
+        //        velocity *= 0.5f;
+        //    }
+        //    else
+        //    {
+        //        transform.position = hitInfo.point;
+        //        float dot = 1f - Vector3.Dot(hitInfo.normal, -velocity.normalized);
+        //        velocity = Vector3.Reflect(velocity, hitInfo.normal) * dot;
+        //    }
+
+        //    if (velocity.sqrMagnitude < 1)
+        //    {
+        //        Push();
+        //    }
+        //}
+    }
+
+    private Color GetVelocityColor()
+    {
+        float a = velocity.magnitude / 500f;
+        return gradient.Evaluate(Mathf.Min(a, 1));
     }
 
     private void CreateDecal(RaycastHit hitInfo)
@@ -79,24 +107,29 @@ public class PhysicsBullet : PoolObject
     {
         velocity = vector * initialSpeed;
     }
+
+    private float PenetrationStrength(float thickness, float strength)
+    {
+        return thickness * strength;
+    }
 }
 
-public class DensityMaterial : MonoBehaviour
-{
-    [SerializeField]
-    private Density density;
-}
+//public class DensityMaterial : MonoBehaviour
+//{
+//    [SerializeField]
+//    private Density density;
+//}
 
-public class Density : ScriptableObject
-{
-    [SerializeField]
-    private float density;
+//public class Density : ScriptableObject
+//{
+//    [SerializeField]
+//    private float density;
 
-    [SerializeField]
-    private float temperature;
-}
+//    [SerializeField]
+//    private float temperature;
+//}
 
-public class Atmosphere
-{
-
-}
+//public class Atmosphere : PhysicMaterial
+//{
+//    public float strength;
+//}
