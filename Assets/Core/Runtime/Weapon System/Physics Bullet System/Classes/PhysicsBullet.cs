@@ -7,10 +7,10 @@ public class PhysicsBullet : PoolObject
 {
     [SerializeField]
     [Suffix("ì/ñ")]
-    private int initialSpeed = 715;
+    private int initialSpeed = 710;
 
     [SerializeField]
-    private float mass = 0.003f;
+    private float mass = 0.0067f;
 
     [SerializeField]
     private PoolObject decalTemplate;
