@@ -18,12 +18,18 @@ public class PhysicsBullet : PoolObject
     [SerializeField]
     private LayerMask cullingLayer;
 
-    [SerializeField]
-    private Gradient gradient;
+    // Stored required components.
+    private Transform _transform;
 
     // Stored required properties.
     private Vector3 lastPosition;
     private Vector3 velocity;
+
+    protected override void Awake()
+    {
+        base.Awake();
+        _transform = transform;
+    }
 
     public void Initialize(Vector3 vector)
     {
@@ -32,23 +38,23 @@ public class PhysicsBullet : PoolObject
 
     private void FixedUpdate()
     {
-        lastPosition = transform.position;
+        lastPosition = _transform.position;
 
         velocity += Physics.gravity * Time.fixedDeltaTime;
-        transform.Translate(velocity * Time.fixedDeltaTime, Space.World);
+        _transform.Translate(velocity * Time.fixedDeltaTime, Space.World);
 
-        if (PhysicsExtension.LinecastBoth(lastPosition, transform.position, out RaycastBothHit bothHitInfo))
+        if (PhysicsExtension.LinecastBoth(lastPosition, _transform.position, out RaycastBothHit bothHitInfo))
         {
             CreateDecal(bothHitInfo.inHit);
 
-            transform.position = bothHitInfo.inHit.point;
-            Debug.DrawLine(lastPosition, transform.position, GetVelocityColor(), 10);
+            _transform.position = bothHitInfo.inHit.point;
+            Debug.DrawLine(lastPosition, _transform.position, GetVelocityColor(), 10);
 
             Through(bothHitInfo);
         }
         else
         {
-            Debug.DrawLine(lastPosition, transform.position, GetVelocityColor(), 10);
+            Debug.DrawLine(lastPosition, _transform.position, GetVelocityColor(), 10);
         }
     }
 
@@ -63,7 +69,7 @@ public class PhysicsBullet : PoolObject
             {
                 CreateDecal(bothHit.outHit);
 
-                transform.position = bothHit.outHit.point;
+                _transform.position = bothHit.outHit.point;
 
                 // Stopping force of the surface.
                 velocity += -velocity.normalized * neededBulletPenetrationForce;
@@ -94,7 +100,7 @@ public class PhysicsBullet : PoolObject
 
     private void Ricochet(RaycastBothHit bothHit)
     {
-        transform.position = bothHit.inHit.point;
+        _transform.position = bothHit.inHit.point;
         velocity = Vector3.Reflect(velocity, bothHit.inHit.normal);
     }
 
@@ -105,8 +111,27 @@ public class PhysicsBullet : PoolObject
 
     private Color GetVelocityColor()
     {
-        float a = velocity.magnitude / 500f;
-        return gradient.Evaluate(Mathf.Min(a, 1));
+        float percent = velocity.magnitude / initialSpeed;
+        if (percent > 0.75f)
+        {
+            return Color.red;
+        }
+        else if (percent > 0.5f)
+        {
+            return Color.yellow;
+        }
+        else if (percent > 0.25f)
+        {
+            return Color.green;
+        }
+        else if (percent > 0.1f)
+        {
+            return Color.blue;
+        }
+        else
+        {
+            return Color.white;
+        }
     }
 
     private float PenetrationStrength(float thickness, float strength)

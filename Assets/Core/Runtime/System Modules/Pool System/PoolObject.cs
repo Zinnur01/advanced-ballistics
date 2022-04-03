@@ -6,7 +6,7 @@ public abstract class PoolObject : MonoBehaviour
 
     private PoolManager pool;
 
-    private void Awake()
+    protected virtual void Awake()
     {
         pool = PoolManager.Instance;
     }
