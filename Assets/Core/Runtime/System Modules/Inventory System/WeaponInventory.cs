@@ -28,7 +28,10 @@ public class WeaponInventory : MonoBehaviour
 
         if (scroll != 0)
         {
-            equippedIndex = (int)Mathf.PingPong(equippedIndex + Mathf.Sign(scroll), items.Count);
+            equippedIndex += (int)Mathf.Sign(scroll);
+
+            equippedIndex = Mathf.Clamp(equippedIndex, 0, items.Count - 1);
+
             Equip(items[equippedIndex]);
         }
     }
