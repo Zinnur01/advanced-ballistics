@@ -40,19 +40,11 @@ public class PhysicsBullet : PoolObject
         if (PhysicsExtension.LinecastBoth(lastPosition, transform.position, out RaycastBothHit bothHitInfo))
         {
             CreateDecal(bothHitInfo.inHit);
-            
+
             transform.position = bothHitInfo.inHit.point;
             Debug.DrawLine(lastPosition, transform.position, GetVelocityColor(), 10);
 
-            float angle = Vector3.Angle(bothHitInfo.inHit.normal, velocity) - 90;
-            if (angle > 60)
-            {
-                Through(bothHitInfo);
-            }
-            else
-            {
-                Ricochet(bothHitInfo);
-            }
+            Through(bothHitInfo);
         }
         else
         {
@@ -72,7 +64,22 @@ public class PhysicsBullet : PoolObject
                 CreateDecal(bothHit.outHit);
 
                 transform.position = bothHit.outHit.point;
+
+                // Stopping force of the surface.
                 velocity += -velocity.normalized * neededBulletPenetrationForce;
+
+                // Deflection of the bullet from the motion vector.
+                float angle = (180 - Vector3.Angle(velocity, bothHit.inHit.normal)) / 90f;
+                float deflectionForce = angle * neededBulletPenetrationForce;
+
+                if (deflectionForce < velocity.magnitude)
+                {
+                    velocity += Random.insideUnitSphere * deflectionForce;
+                }
+                else
+                {
+                    Push();
+                }
             }
             else
             {

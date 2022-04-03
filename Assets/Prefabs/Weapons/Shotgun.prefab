@@ -89,7 +89,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebd5c19361f3d55448a5436c40a69035, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rpm: 300
+  rpm: 30
   firePoint: {fileID: 2755962029197742045}
   bulletTemplate: {fileID: 2037635922568719703, guid: 23cdfd93bf17bb44fa2526ead49c83fa, type: 3}
   ballCount: 50
