@@ -18,6 +18,9 @@ public class PhysicsBullet : PoolObject
     [SerializeField]
     private LayerMask cullingLayer;
 
+    [SerializeField]
+    private float k;
+
     // Stored required components.
     private Transform _transform;
 
@@ -38,9 +41,12 @@ public class PhysicsBullet : PoolObject
 
     private void FixedUpdate()
     {
+        Debug.Log(_transform.position.y);
         lastPosition = _transform.position;
 
+        velocity += -velocity * Time.fixedDeltaTime * k;
         velocity += Physics.gravity * Time.fixedDeltaTime;
+
         _transform.Translate(velocity * Time.fixedDeltaTime, Space.World);
 
         if (PhysicsExtension.LinecastBoth(lastPosition, _transform.position, out RaycastBothHit bothHitInfo))
