@@ -5,6 +5,7 @@ public class PoolManager : Singleton<PoolManager>
 {
     private Dictionary<string, PoolContainer> pool = new Dictionary<string, PoolContainer>();
 
+    #region [Push]
     public void Push(PoolObject value)
     {
         if (value != null)
@@ -22,7 +23,9 @@ public class PoolManager : Singleton<PoolManager>
             value.transform.SetParent(transform);
         }
     }
+    #endregion
 
+    #region [Pop]
     public T CreateOrPop<T>(PoolObject template) where T : PoolObject
     {
         if (template != null)
@@ -53,4 +56,5 @@ public class PoolManager : Singleton<PoolManager>
         }
         return value;
     }
+    #endregion
 }

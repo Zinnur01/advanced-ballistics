@@ -1,12 +1,15 @@
 using ApexInspector;
-using System.Collections;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class PhysicsBullet : PoolObject
 {
     [SerializeField]
-    [Suffix("ì/ñ")]
+    [Suffix("m/s")]
     private int initialSpeed = 710;
 
     [SerializeField]
@@ -41,11 +44,12 @@ public class PhysicsBullet : PoolObject
 
     private void FixedUpdate()
     {
-        Debug.Log(_transform.position.y);
         lastPosition = _transform.position;
 
         velocity += -velocity * Time.fixedDeltaTime * k;
         velocity += Physics.gravity * Time.fixedDeltaTime;
+
+        ExternalForcesManager.Impact(ref velocity);
 
         _transform.Translate(velocity * Time.fixedDeltaTime, Space.World);
 
@@ -143,6 +147,46 @@ public class PhysicsBullet : PoolObject
     private float PenetrationStrength(float thickness, float strength)
     {
         return thickness * strength;
+    }
+}
+
+public interface IExternalForce
+{
+    void Impact(ref Vector3 velocity);
+}
+
+public static class ExternalForcesManager
+{
+    private static List<IExternalForce> forces;
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSplashScreen)]
+    private static void Initialize()
+    {
+        forces = new List<IExternalForce>();
+
+        var types = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.GetInterfaces().Contains(typeof(IExternalForce)));
+        foreach (Type type in types)
+        {
+            forces.Add((IExternalForce)Activator.CreateInstance(type));
+        }
+    }
+
+    public static void Impact(ref Vector3 velocity)
+    {
+        for (int i = 0; i < forces.Count; i++)
+        {
+            forces[i].Impact(ref velocity);
+        }
+    }
+}
+
+public class Wind : IExternalForce
+{
+    private Vector3 force = new Vector3(0, 0, 1);
+
+    public void Impact(ref Vector3 velocity)
+    {
+        velocity += force * Time.fixedDeltaTime;
     }
 }
 

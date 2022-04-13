@@ -407,6 +407,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd114a11bf810f74e9397c0d3842fc8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rpm: 10000
+  rpm: 540
   firePoint: {fileID: 1182894710312075985}
   bulletTemplate: {fileID: 161227886530925290, guid: 36f6803dae7f0cb4aa5ef9754963cd59, type: 3}
