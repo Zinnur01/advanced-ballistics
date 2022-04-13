@@ -10,9 +10,17 @@ public abstract class WeaponShootingSystem : MonoBehaviour
     [SerializeField]
     private Transform firePoint;
 
+    // Stored required components.
+    private Transform cameraTransform;
+
     // Stored required properties.
     private float fireDelay;
     private float lastShootTime;
+
+    private void Awake()
+    {
+        cameraTransform = GetComponentInParent<Camera>().transform;
+    }
 
     private void Start()
     {
@@ -24,7 +32,7 @@ public abstract class WeaponShootingSystem : MonoBehaviour
         if (Input.GetMouseButton(0) && lastShootTime + fireDelay < Time.time)
         {
             lastShootTime = Time.time;
-            Shoot(firePoint.position, firePoint.forward);
+            Shoot(cameraTransform.position, cameraTransform.forward);
         }
     }
 

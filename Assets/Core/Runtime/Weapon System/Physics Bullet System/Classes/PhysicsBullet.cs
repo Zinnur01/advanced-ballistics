@@ -60,7 +60,10 @@ public class PhysicsBullet : PoolObject
             _transform.position = bothHitInfo.inHit.point;
             Debug.DrawLine(lastPosition, _transform.position, GetVelocityColor(), 10);
 
-            Through(bothHitInfo);
+            if (!Through(bothHitInfo))
+            {
+                Ricochet(bothHitInfo);
+            }
         }
         else
         {
@@ -68,7 +71,7 @@ public class PhysicsBullet : PoolObject
         }
     }
 
-    private void Through(RaycastBothHit bothHit)
+    private bool Through(RaycastBothHit bothHit)
     {
         PhysicsSurface surface = bothHit.inHit.transform.GetComponent<PhysicsSurface>();
         if (surface != null)
@@ -99,19 +102,25 @@ public class PhysicsBullet : PoolObject
             }
             else
             {
-                Push();
+                return false;
+                //Push();
             }
         }
         else
         {
             Push();
         }
+
+        return true;
     }
 
     private void Ricochet(RaycastBothHit bothHit)
     {
         _transform.position = bothHit.inHit.point;
         velocity = Vector3.Reflect(velocity, bothHit.inHit.normal);
+
+        float d = Vector3.Angle(velocity, bothHit.inHit.normal) / 90f;
+        velocity *= d;
     }
 
     private void CreateDecal(RaycastHit hitInfo)
@@ -150,11 +159,6 @@ public class PhysicsBullet : PoolObject
     }
 }
 
-public interface IExternalForce
-{
-    void Impact(ref Vector3 velocity);
-}
-
 public static class ExternalForcesManager
 {
     private static List<IExternalForce> forces;
@@ -178,6 +182,11 @@ public static class ExternalForcesManager
             forces[i].Impact(ref velocity);
         }
     }
+}
+
+public interface IExternalForce
+{
+    void Impact(ref Vector3 velocity);
 }
 
 public class Wind : IExternalForce
