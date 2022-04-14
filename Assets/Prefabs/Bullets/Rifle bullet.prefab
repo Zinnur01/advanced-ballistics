@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9dae7c49faa5b884cbe4c0caf30c0498, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initialSpeed: 710
+  initialSpeed: 100
   mass: 0.0076
   decalTemplate: {fileID: 9146471034583258201, guid: 5dc87830aa2c81e42815648e8c558bb9, type: 3}
   cullingLayer:

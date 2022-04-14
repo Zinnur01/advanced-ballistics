@@ -46,7 +46,6 @@ public class PhysicsBullet : PoolObject
     {
         lastPosition = _transform.position;
 
-        velocity += -velocity * Time.fixedDeltaTime * k;
         velocity += Physics.gravity * Time.fixedDeltaTime;
 
         ExternalForcesManager.Impact(ref velocity);
@@ -93,7 +92,7 @@ public class PhysicsBullet : PoolObject
 
                 if (deflectionForce < velocity.magnitude)
                 {
-                    velocity += Random.insideUnitSphere * deflectionForce;
+                    velocity += Random.insideUnitSphere * (deflectionForce / 10f);
                 }
                 else
                 {
@@ -119,8 +118,15 @@ public class PhysicsBullet : PoolObject
         _transform.position = bothHit.inHit.point;
         velocity = Vector3.Reflect(velocity, bothHit.inHit.normal);
 
-        float d = Vector3.Angle(velocity, bothHit.inHit.normal) / 90f;
-        velocity *= d;
+        float angle = Vector3.Angle(velocity, bothHit.inHit.normal);
+        if (angle < 30f)
+        {
+            Push();
+        }
+        else
+        {
+            velocity *= (angle / 90f) / 5f;
+        }
     }
 
     private void CreateDecal(RaycastHit hitInfo)
@@ -159,6 +165,11 @@ public class PhysicsBullet : PoolObject
     }
 }
 
+public interface IExternalForce
+{
+    void Impact(ref Vector3 velocity);
+}
+
 public static class ExternalForcesManager
 {
     private static List<IExternalForce> forces;
@@ -184,14 +195,9 @@ public static class ExternalForcesManager
     }
 }
 
-public interface IExternalForce
-{
-    void Impact(ref Vector3 velocity);
-}
-
 public class Wind : IExternalForce
 {
-    private Vector3 force = new Vector3(0, 0, 1);
+    private Vector3 force = new Vector3(0, 0, 10);
 
     public void Impact(ref Vector3 velocity)
     {
@@ -199,22 +205,12 @@ public class Wind : IExternalForce
     }
 }
 
-//public class DensityMaterial : MonoBehaviour
-//{
-//    [SerializeField]
-//    private Density density;
-//}
+public class AirResistance : IExternalForce
+{
+    private float k = 0.1f;
 
-//public class Density : ScriptableObject
-//{
-//    [SerializeField]
-//    private float density;
-
-//    [SerializeField]
-//    private float temperature;
-//}
-
-//public class Atmosphere : PhysicMaterial
-//{
-//    public float strength;
-//}
+    public void Impact(ref Vector3 velocity)
+    {
+        velocity += -velocity * Time.fixedDeltaTime * k;
+    }
+}
