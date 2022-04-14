@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PoolContainer : IEnumerable, IEnumerable<PoolObject>
 {
+    private Transform parent;
     private Stack<PoolObject> stack;
     private PoolObject template;
     private string templateID;
@@ -11,14 +12,19 @@ public class PoolContainer : IEnumerable, IEnumerable<PoolObject>
     public PoolContainer(PoolObject template)
     {
         stack = new Stack<PoolObject>();
+
         this.template = template;
         templateID = template.GetID();
+
+        parent = new GameObject($"[Pool Container] - {template.name}").transform;
+        parent.SetParent(PoolManager.Instance.transform);
     }
 
     public void Push(PoolObject value)
     {
         value.gameObject.SetActive(false);
         stack.Push(value);
+        value.transform.SetParent(parent);
     }
 
     public PoolObject Pop()
@@ -27,10 +33,12 @@ public class PoolContainer : IEnumerable, IEnumerable<PoolObject>
         {
             PoolObject value = stack.Pop();
             value.gameObject.SetActive(true);
+            value.transform.SetParent(null);
             return value;
         }
         PoolObject newValue = GameObject.Instantiate(template);
         newValue.SetID(templateID);
+        newValue.transform.SetParent(null);
         return newValue;
     }
 

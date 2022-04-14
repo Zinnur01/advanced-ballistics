@@ -20,7 +20,6 @@ public class PoolManager : Singleton<PoolManager>
             }
 
             container.Push(value);
-            value.transform.SetParent(transform);
         }
     }
     #endregion
@@ -40,7 +39,6 @@ public class PoolManager : Singleton<PoolManager>
             }
 
             PoolObject value = container.Pop();
-            value.transform.SetParent(null);
             return value as T;
         }
         return null;

@@ -1,4 +1,5 @@
 using ApexInspector;
+using Runtime.SourceModules.ExternalForce;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,10 +47,7 @@ public class PhysicsBullet : PoolObject
     {
         lastPosition = _transform.position;
 
-        velocity += Physics.gravity * Time.fixedDeltaTime;
-
-        ExternalForcesManager.Impact(ref velocity);
-
+        ExternalForcesManager.Instance.Impact(ref velocity, Time.fixedDeltaTime);
         _transform.Translate(velocity * Time.fixedDeltaTime, Space.World);
 
         if (PhysicsExtension.LinecastBoth(lastPosition, _transform.position, out RaycastBothHit bothHitInfo))
@@ -162,55 +160,5 @@ public class PhysicsBullet : PoolObject
     private float PenetrationStrength(float thickness, float strength)
     {
         return thickness * strength;
-    }
-}
-
-public interface IExternalForce
-{
-    void Impact(ref Vector3 velocity);
-}
-
-public static class ExternalForcesManager
-{
-    private static List<IExternalForce> forces;
-
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSplashScreen)]
-    private static void Initialize()
-    {
-        forces = new List<IExternalForce>();
-
-        var types = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.GetInterfaces().Contains(typeof(IExternalForce)));
-        foreach (Type type in types)
-        {
-            forces.Add((IExternalForce)Activator.CreateInstance(type));
-        }
-    }
-
-    public static void Impact(ref Vector3 velocity)
-    {
-        for (int i = 0; i < forces.Count; i++)
-        {
-            forces[i].Impact(ref velocity);
-        }
-    }
-}
-
-public class Wind : IExternalForce
-{
-    private Vector3 force = new Vector3(0, 0, 10);
-
-    public void Impact(ref Vector3 velocity)
-    {
-        velocity += force * Time.fixedDeltaTime;
-    }
-}
-
-public class AirResistance : IExternalForce
-{
-    private float k = 0.1f;
-
-    public void Impact(ref Vector3 velocity)
-    {
-        velocity += -velocity * Time.fixedDeltaTime * k;
     }
 }
