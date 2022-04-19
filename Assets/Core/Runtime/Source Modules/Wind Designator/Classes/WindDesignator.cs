@@ -1,6 +1,4 @@
 using Runtime.SourceModules.ExternalForce;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class WindDesignator : MonoBehaviour

@@ -50,7 +50,6 @@ MonoBehaviour:
   cullingLayer:
     serializedVersion: 2
     m_Bits: 1
-  k: 0.1
 --- !u!114 &49199382343905665
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -63,4 +62,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61dcec14ab2cb744abf88c9e99953b23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  delay: 50
+  delay: 10

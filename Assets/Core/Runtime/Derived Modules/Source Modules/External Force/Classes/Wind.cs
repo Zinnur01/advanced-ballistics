@@ -6,10 +6,20 @@ namespace Runtime.SourceModules.ExternalForce
     [CreateAssetMenu(fileName = "Wind", menuName = "External Forces/Wind")]
     public class Wind : ExternalForce
     {
-        [SerializeField]
-        private Vector3 velocity = new Vector3(0, 0, 10);
-
         public event Action<Vector3> OnChangeVelocity;
+
+        [SerializeField]
+        private Vector3 _velocity = new Vector3(0, 0, 10);
+
+        private Vector3 velocity
+        {
+            get => _velocity;
+            set
+            {
+                _velocity = value;
+                OnChangeVelocity(value);
+            }
+        }
 
         public override void Impact(ref Vector3 velocity, float deltaTime)
         {
@@ -30,7 +40,6 @@ namespace Runtime.SourceModules.ExternalForce
         public void SetVelocity(Vector3 velocity)
         {
             this.velocity = velocity;
-            OnChangeVelocity?.Invoke(velocity);
         }
         #endregion
     }

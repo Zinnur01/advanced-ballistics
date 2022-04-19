@@ -22,9 +22,6 @@ public class PhysicsBullet : PoolObject
     [SerializeField]
     private LayerMask cullingLayer;
 
-    [SerializeField]
-    private float k;
-
     // Stored required components.
     private Transform _transform;
 
@@ -135,6 +132,8 @@ public class PhysicsBullet : PoolObject
     private Color GetVelocityColor()
     {
         float percent = velocity.magnitude / initialSpeed;
+        return Color.HSVToRGB(percent, 1f, 1f);
+
         if (percent > 0.75f)
         {
             return Color.red;
