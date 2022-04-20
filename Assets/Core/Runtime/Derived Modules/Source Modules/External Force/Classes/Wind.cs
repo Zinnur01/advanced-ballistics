@@ -1,3 +1,4 @@
+using Runtime.Attributes;
 using System;
 using UnityEngine;
 
@@ -6,7 +7,9 @@ namespace Runtime.SourceModules.ExternalForce
     [CreateAssetMenu(fileName = "Wind", menuName = "External Forces/Wind")]
     public class Wind : ExternalForce
     {
-        public event Action<Vector3> OnChangeVelocity;
+        [SerializeField]
+        [Direction]
+        private Vector2 direction;
 
         [SerializeField]
         private Vector3 _velocity = new Vector3(0, 0, 10);
@@ -30,6 +33,10 @@ namespace Runtime.SourceModules.ExternalForce
         {
             OnChangeVelocity?.Invoke(velocity);
         }
+
+        #region [Events]
+        public event Action<Vector3> OnChangeVelocity;
+        #endregion
 
         #region [Getter / Setter]
         public Vector3 GetVelocity()
