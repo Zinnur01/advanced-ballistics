@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -11,15 +10,14 @@ public class WeaponInventory : MonoBehaviour
     [SerializeField]
     private List<WeaponItem> items = new List<WeaponItem>();
 
-    private int equippedIndex;
-    private GameObject weaponObject;
+    private List<WeaponIdentifier> weapons = new List<WeaponIdentifier>();
+    private WeaponIdentifier equippedWeapon;
+    private int equippedIndex = -1;
 
     private void Awake()
     {
-        if (items.Count > 0)
-        {
-            Equip(items.First());
-        }
+        InitializeWeapons();
+        Equip(0);
     }
 
     private void Update()
@@ -28,21 +26,32 @@ public class WeaponInventory : MonoBehaviour
 
         if (scroll != 0)
         {
-            equippedIndex += (int)Mathf.Sign(scroll);
-
-            equippedIndex = Mathf.Clamp(equippedIndex, 0, items.Count - 1);
-
-            Equip(items[equippedIndex]);
+            Equip(equippedIndex + (int)Mathf.Sign(scroll));
         }
     }
 
-    private void Equip(WeaponItem item)
+    private void InitializeWeapons()
     {
-        if (weaponObject != null)
+        for (int i = 0; i < items.Count; i++)
         {
-            Destroy(weaponObject);
+            WeaponIdentifier weaponIdentifier = GameObject.Instantiate<WeaponIdentifier>(items[i].GetWeaponIdentifier(), weaponHinge);
+            weaponIdentifier.gameObject.SetActive(false);
+            weapons.Add(weaponIdentifier);
         }
+    }
 
-        weaponObject = Instantiate(item.GetWeaponIdentifier(), weaponHinge).gameObject;
+    private void Equip(int index)
+    {
+        if (index != equippedIndex && index >= 0 && index < weapons.Count)
+        {
+            if (equippedWeapon != null)
+            {
+                equippedWeapon.gameObject.SetActive(false);
+            }
+
+            equippedIndex = index;
+            equippedWeapon = weapons[index];
+            equippedWeapon.gameObject.SetActive(true);
+        }
     }
 }

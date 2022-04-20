@@ -14,7 +14,6 @@ public abstract class WeaponShootingSystem : MonoBehaviour
     private AudioClip shootClip;
 
     // Stored required components.
-    private Transform cameraTransform;
     private AudioSource audioSource;
 
     // Stored required properties.
@@ -23,7 +22,6 @@ public abstract class WeaponShootingSystem : MonoBehaviour
 
     private void Awake()
     {
-        cameraTransform = GetComponentInParent<Camera>().transform;
         audioSource = GetComponent<AudioSource>();
     }
 
@@ -37,7 +35,7 @@ public abstract class WeaponShootingSystem : MonoBehaviour
         if (Input.GetMouseButton(0) && lastShootTime + fireDelay < Time.time)
         {
             lastShootTime = Time.time;
-            Shoot(cameraTransform.position, cameraTransform.forward);
+            Shoot(firePoint.position, firePoint.forward);
 
             if (audioSource != null && shootClip != null)
             {

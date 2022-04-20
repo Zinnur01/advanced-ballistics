@@ -101,6 +101,7 @@ public class PhysicsBullet : PoolObject
         }
         else
         {
+            return false;
             Push();
         }
 

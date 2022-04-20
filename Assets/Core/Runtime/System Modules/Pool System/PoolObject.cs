@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public abstract class PoolObject : MonoBehaviour
 {
@@ -14,8 +15,10 @@ public abstract class PoolObject : MonoBehaviour
     public void Push()
     {
         OnBeforePush();
+        OnBeforePushCallback?.Invoke();
         pool.Push(this);
         OnAfterPush();
+        OnAfterPushCallback?.Invoke();
     }
 
     protected virtual void OnBeforePush() { }
@@ -35,6 +38,11 @@ public abstract class PoolObject : MonoBehaviour
         id = id.Replace("-", "");
         return id;
     }
+
+    #region [Events]
+    public event Action OnBeforePushCallback;
+    public event Action OnAfterPushCallback;
+    #endregion
 
     #region [Getter / Setter]
     public string GetID()
