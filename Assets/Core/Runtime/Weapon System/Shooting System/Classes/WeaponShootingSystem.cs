@@ -10,8 +10,12 @@ public abstract class WeaponShootingSystem : MonoBehaviour
     [SerializeField]
     private Transform firePoint;
 
+    [SerializeField]
+    private AudioClip shootClip;
+
     // Stored required components.
     private Transform cameraTransform;
+    private AudioSource audioSource;
 
     // Stored required properties.
     private float fireDelay;
@@ -20,6 +24,7 @@ public abstract class WeaponShootingSystem : MonoBehaviour
     private void Awake()
     {
         cameraTransform = GetComponentInParent<Camera>().transform;
+        audioSource = GetComponent<AudioSource>();
     }
 
     private void Start()
@@ -33,6 +38,11 @@ public abstract class WeaponShootingSystem : MonoBehaviour
         {
             lastShootTime = Time.time;
             Shoot(cameraTransform.position, cameraTransform.forward);
+
+            if (audioSource != null && shootClip != null)
+            {
+                audioSource.PlayOneShot(shootClip);
+            }
         }
     }
 

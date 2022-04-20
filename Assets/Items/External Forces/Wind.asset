@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa53cb2e49c034648a3fb589767decd2, type: 3}
   m_Name: Wind
   m_EditorClassIdentifier: 
-  _velocity: {x: 0, y: 0, z: 100}
+  _velocity: {x: -5, y: 0, z: 5}

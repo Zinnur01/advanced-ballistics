@@ -5,12 +5,6 @@ using UnityEngine;
 [HideScriptField]
 public class PhysicsSurfaceAsset : ScriptableObject
 {
-    [SerializeField]
     [Suffix("HB")]
-    private float strength;
-
-    public float GetStrength()
-    {
-        return strength;
-    }
+    public float strength;
 }

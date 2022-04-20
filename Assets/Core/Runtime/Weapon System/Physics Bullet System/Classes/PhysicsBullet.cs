@@ -70,7 +70,7 @@ public class PhysicsBullet : PoolObject
         PhysicsSurface surface = bothHit.inHit.transform.GetComponent<PhysicsSurface>();
         if (surface != null)
         {
-            float neededBulletPenetrationForce = PenetrationStrength(bothHit.gap, surface.GetSurface().GetStrength()) / mass;
+            float neededBulletPenetrationForce = PenetrationStrength(bothHit.gap, surface.GetSurface().strength) / mass;
 
             if (velocity.magnitude > neededBulletPenetrationForce)
             {
@@ -82,8 +82,8 @@ public class PhysicsBullet : PoolObject
                 velocity += -velocity.normalized * neededBulletPenetrationForce;
 
                 // Deflection of the bullet from the motion vector.
-                float angle = (180 - Vector3.Angle(velocity, bothHit.inHit.normal)) / 90f;
-                float deflectionForce = angle * neededBulletPenetrationForce;
+                float k = (180 - Vector3.Angle(velocity, bothHit.inHit.normal)) / 90f;
+                float deflectionForce = k * neededBulletPenetrationForce;
 
                 if (deflectionForce < velocity.magnitude)
                 {
@@ -97,7 +97,6 @@ public class PhysicsBullet : PoolObject
             else
             {
                 return false;
-                //Push();
             }
         }
         else
@@ -134,26 +133,26 @@ public class PhysicsBullet : PoolObject
         float percent = velocity.magnitude / initialSpeed;
         return Color.HSVToRGB(percent, 1f, 1f);
 
-        if (percent > 0.75f)
-        {
-            return Color.red;
-        }
-        else if (percent > 0.5f)
-        {
-            return Color.yellow;
-        }
-        else if (percent > 0.25f)
-        {
-            return Color.green;
-        }
-        else if (percent > 0.1f)
-        {
-            return Color.blue;
-        }
-        else
-        {
-            return Color.white;
-        }
+        //if (percent > 0.75f)
+        //{
+        //    return Color.red;
+        //}
+        //else if (percent > 0.5f)
+        //{
+        //    return Color.yellow;
+        //}
+        //else if (percent > 0.25f)
+        //{
+        //    return Color.green;
+        //}
+        //else if (percent > 0.1f)
+        //{
+        //    return Color.blue;
+        //}
+        //else
+        //{
+        //    return Color.white;
+        //}
     }
 
     private float PenetrationStrength(float thickness, float strength)

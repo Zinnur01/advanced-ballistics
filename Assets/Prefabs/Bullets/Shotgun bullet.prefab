@@ -45,12 +45,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   initialSpeed: 330
-  mass: 0.00076
+  mass: 0.005428571
   decalTemplate: {fileID: 9146471034583258201, guid: 5dc87830aa2c81e42815648e8c558bb9, type: 3}
   cullingLayer:
     serializedVersion: 2
     m_Bits: 1
-  k: 0.1
 --- !u!114 &-7001652215049990596
 MonoBehaviour:
   m_ObjectHideFlags: 0
