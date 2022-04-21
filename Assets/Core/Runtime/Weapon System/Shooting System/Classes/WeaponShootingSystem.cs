@@ -15,6 +15,7 @@ public abstract class WeaponShootingSystem : MonoBehaviour
 
     // Stored required components.
     private AudioSource audioSource;
+    private Transform cameraTransform;
 
     // Stored required properties.
     private float fireDelay;
@@ -23,6 +24,7 @@ public abstract class WeaponShootingSystem : MonoBehaviour
     private void Awake()
     {
         audioSource = GetComponent<AudioSource>();
+        cameraTransform = GetComponentInParent<Camera>().transform;
     }
 
     private void Start()
@@ -35,7 +37,7 @@ public abstract class WeaponShootingSystem : MonoBehaviour
         if (Input.GetMouseButton(0) && lastShootTime + fireDelay < Time.time)
         {
             lastShootTime = Time.time;
-            Shoot(firePoint.position, firePoint.forward);
+            Shoot(firePoint.position, GetShootDirection());
 
             if (audioSource != null && shootClip != null)
             {
@@ -45,6 +47,19 @@ public abstract class WeaponShootingSystem : MonoBehaviour
     }
 
     protected abstract void Shoot(Vector3 origin, Vector3 direction);
+
+    private Vector3 GetShootDirection()
+    {
+        Ray ray = new Ray(cameraTransform.position, cameraTransform.forward);
+        if (Physics.Raycast(ray, out RaycastHit hitInfo))
+        {
+            if (hitInfo.distance > 1f)
+            {
+                return (hitInfo.point - firePoint.position).normalized;
+            }
+        }
+        return firePoint.forward;
+    }
 
     private float RPM2Delay(float rpm)
     {
