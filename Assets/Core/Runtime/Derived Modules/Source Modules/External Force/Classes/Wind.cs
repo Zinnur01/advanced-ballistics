@@ -1,4 +1,3 @@
-using Runtime.Attributes;
 using System;
 using UnityEngine;
 
@@ -7,10 +6,6 @@ namespace Runtime.SourceModules.ExternalForce
     [CreateAssetMenu(fileName = "Wind", menuName = "External Forces/Wind")]
     public class Wind : ExternalForce
     {
-        [SerializeField]
-        [Direction]
-        private Vector2 direction;
-
         [SerializeField]
         private Vector3 _velocity = new Vector3(0, 0, 10);
 
