@@ -1,3 +1,4 @@
+using Runtime.Attributes;
 using System;
 using UnityEngine;
 
@@ -7,17 +8,14 @@ namespace Runtime.SourceModules.ExternalForce
     public class Wind : ExternalForce
     {
         [SerializeField]
-        private Vector3 _velocity = new Vector3(0, 0, 10);
+        [Direction(normalized = true)]
+        private Vector2 direction;
 
-        private Vector3 velocity
-        {
-            get => _velocity;
-            set
-            {
-                _velocity = value;
-                OnChangeVelocity(value);
-            }
-        }
+        [SerializeField]
+        [Min(0f)]
+        private float force;
+
+        private Vector3 velocity => new Vector3(direction.x, 0, direction.y) * force;
 
         public override void Impact(ref Vector3 velocity, float deltaTime)
         {
@@ -37,11 +35,6 @@ namespace Runtime.SourceModules.ExternalForce
         public Vector3 GetVelocity()
         {
             return velocity;
-        }
-
-        public void SetVelocity(Vector3 velocity)
-        {
-            this.velocity = velocity;
         }
         #endregion
     }

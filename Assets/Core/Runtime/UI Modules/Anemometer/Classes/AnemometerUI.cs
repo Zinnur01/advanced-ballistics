@@ -20,6 +20,6 @@ public class AnemometerUI : MonoBehaviour
         float force = project.magnitude;
         float dot = Mathf.Sign(Vector3.Dot(player.forward, windAsset.GetVelocity()));
 
-        propeller.Rotate(new Vector3(0, 0, force * Time.deltaTime * dot));
+        propeller.Rotate(new Vector3(0, 0, force * Time.deltaTime * dot * 90f));
     }
 }
