@@ -58,6 +58,11 @@ public class PhysicsBullet : PoolObject
             {
                 Ricochet(bothHitInfo);
             }
+
+            if (velocity.sqrMagnitude < 1f)
+            {
+                Push();
+            }
         }
         else
         {
