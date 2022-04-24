@@ -29,26 +29,25 @@ namespace Editor.Attributes
             float circleSize = EditorGUIUtility.singleLineHeight * 6f;
             float radius = circleSize / 2;
             Rect centerPosition = new Rect(position.center.x - radius, position.y, circleSize, circleSize);
-            //EditorGUI.DrawRect(centerPosition, Color.white);
 
             Vector2 mousePosition = (e.mousePosition - centerPosition.center) / radius;
 
             vector.y *= -1;
 
-            if (e.type == EventType.MouseDown && !dragging)
+            if (!dragging && e.type == EventType.MouseDown)
             {
-                if (Vector2.Distance(vector, mousePosition) < 0.1f)
+                if (mousePosition.magnitude <= 1f)
                 {
                     dragging = true;
                 }
             }
 
-            if (e.type == EventType.MouseUp && dragging)
+            if (dragging && e.type == EventType.MouseUp)
             {
                 dragging = false;
             }
 
-            if (e.type == EventType.MouseDrag && dragging)
+            if (dragging && (e.type == EventType.MouseDrag || e.type == EventType.MouseDown))
             {
                 vector = mousePosition;
 
@@ -63,8 +62,8 @@ namespace Editor.Attributes
 
             GUIUtility.RotateAroundPivot(Mathf.Atan2(-vector.x, vector.y) * Mathf.Rad2Deg, centerPosition.center);
             EditorGUI.DrawRect(new Rect(centerPosition.center, new Vector2(1, vector.magnitude * radius)), Color.white);
-
             GUI.matrix = Matrix4x4.identity;
+
             Vector2 rectPosition = centerPosition.center + vector * radius - new Vector2(0.05f, 0.05f) * radius;
             EditorGUI.DrawRect(new Rect(rectPosition, new Vector2(0.1f, 0.1f) * radius), Color.red);
 
@@ -75,7 +74,7 @@ namespace Editor.Attributes
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
-            return EditorGUI.GetPropertyHeight(property, label) + EditorGUIUtility.standardVerticalSpacing + EditorGUIUtility.singleLineHeight * 6f;
+            return EditorGUI.GetPropertyHeight(property, label) + EditorGUIUtility.standardVerticalSpacing * 2f + EditorGUIUtility.singleLineHeight * 6f;
         }
     }
 }
