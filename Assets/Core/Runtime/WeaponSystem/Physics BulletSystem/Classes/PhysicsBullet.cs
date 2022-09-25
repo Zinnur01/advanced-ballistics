@@ -1,9 +1,5 @@
 using ApexInspector;
 using Runtime.SourceModules.ExternalForce;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -45,6 +41,8 @@ public class PhysicsBullet : PoolObject
         lastPosition = _transform.position;
 
         ExternalForcesManager.Instance.Impact(ref velocity, Time.fixedDeltaTime);
+
+
         _transform.Translate(velocity * Time.fixedDeltaTime, Space.World);
 
         if (PhysicsExtension.LinecastBoth(lastPosition, _transform.position, out RaycastBothHit bothHitInfo))
@@ -73,7 +71,7 @@ public class PhysicsBullet : PoolObject
     private bool Through(RaycastBothHit bothHit)
     {
         PhysicsSurface surface = bothHit.inHit.transform.GetComponent<PhysicsSurface>();
-        if (surface != null)
+        if (surface != null && surface.GetSurface() != null)
         {
             float neededBulletPenetrationForce = PenetrationStrength(bothHit.gap, surface.GetSurface().strength) / mass;
 
