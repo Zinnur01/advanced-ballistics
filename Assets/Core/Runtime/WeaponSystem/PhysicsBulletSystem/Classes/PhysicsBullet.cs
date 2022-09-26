@@ -47,10 +47,17 @@ public class PhysicsBullet : PoolObject
 
         if (PhysicsExtension.LinecastBoth(lastPosition, _transform.position, out RaycastBothHit bothHitInfo))
         {
-            CreateDecal(bothHitInfo.inHit);
-
             _transform.position = bothHitInfo.inHit.point;
             Debug.DrawLine(lastPosition, _transform.position, GetVelocityColor(), 10);
+
+            if (bothHitInfo.inHit.transform.TryGetComponent<IDamageable>(out IDamageable damageable))
+            {
+                damageable.Damage(bothHitInfo.inHit.point, 1f);
+            }
+            else
+            {
+                CreateDecal(bothHitInfo.inHit);
+            }
 
             if (!Through(bothHitInfo))
             {
