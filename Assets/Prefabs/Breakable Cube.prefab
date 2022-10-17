@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1783726001504447434}
   - component: {fileID: 1783726001504447429}
   - component: {fileID: 1783726001504447428}
-  - component: {fileID: -3926963436244863549}
+  - component: {fileID: -8979614564979991604}
   m_Layer: 0
   m_Name: Breakable Cube
   m_TagString: Untagged
@@ -112,8 +112,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   template: {fileID: 1783726001504447428}
-  maxDepth: 3
---- !u!54 &-3926963436244863549
+  maxDepth: 4
+--- !u!54 &-8979614564979991604
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

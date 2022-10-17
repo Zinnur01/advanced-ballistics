@@ -8,7 +8,7 @@ public class CameraMovement : MonoBehaviour
     private Transform cameraHinge;
 
     [SerializeField]
-    private Vector2 sensetivity;
+    private UnityEngine.Vector2 sensetivity;
 
     // Stored required properties.
     private float yAxis;

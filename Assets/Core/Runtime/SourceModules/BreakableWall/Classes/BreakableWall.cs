@@ -35,11 +35,12 @@ public class BreakableWall : MonoBehaviour, IDamageable
                 {
                     Vector3 a = new Vector3(i, j, k);
                     Vector3 b = transform.position + Vector3.Scale(offset, a);
-                    BreakableWall wall = Instantiate<BreakableWall>(template, b, Quaternion.identity);
+                    BreakableWall wall = Instantiate<BreakableWall>(template, b, transform.rotation);
                     wall.transform.localScale = size;
                     wall.depth = depth + 1;
 
-                    if (Vector3.Distance(point, b) < radius + offset.magnitude)
+                    if (side == a)
+                    //if (Vector3.Distance(point, b) < radius + offset.magnitude)
                     {
                         wall.Damage(point, radius);
                     }

@@ -11,7 +11,7 @@ namespace Editor.Attributes
 
         private bool dragging = false;
 
-        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+        public override void OnGUI(UnityEngine.Rect position, SerializedProperty property, GUIContent label)
         {
             if (directionAttribute == null)
             {
@@ -21,16 +21,16 @@ namespace Editor.Attributes
             Event e = Event.current;
 
             EditorGUI.BeginDisabledGroup(true);
-            Vector2 vector = EditorGUI.Vector2Field(position, label, property.vector2Value);
+            UnityEngine.Vector2 vector = EditorGUI.Vector2Field(position, label, property.vector2Value);
             EditorGUI.EndDisabledGroup();
 
-            position = new Rect(position.x, position.y + EditorGUI.GetPropertyHeight(property, label) + EditorGUIUtility.standardVerticalSpacing, position.width, EditorGUIUtility.singleLineHeight * 6f);
+            position = new UnityEngine.Rect(position.x, position.y + EditorGUI.GetPropertyHeight(property, label) + EditorGUIUtility.standardVerticalSpacing, position.width, EditorGUIUtility.singleLineHeight * 6f);
 
             float circleSize = EditorGUIUtility.singleLineHeight * 6f;
             float radius = circleSize / 2;
-            Rect centerPosition = new Rect(position.center.x - radius, position.y, circleSize, circleSize);
+            UnityEngine.Rect centerPosition = new UnityEngine.Rect(position.center.x - radius, position.y, circleSize, circleSize);
 
-            Vector2 mousePosition = (e.mousePosition - centerPosition.center) / radius;
+            UnityEngine.Vector2 mousePosition = (e.mousePosition - centerPosition.center) / radius;
 
             vector.y *= -1;
 
@@ -61,11 +61,11 @@ namespace Editor.Attributes
 
 
             GUIUtility.RotateAroundPivot(Mathf.Atan2(-vector.x, vector.y) * Mathf.Rad2Deg, centerPosition.center);
-            EditorGUI.DrawRect(new Rect(centerPosition.center, new Vector2(1, vector.magnitude * radius)), Color.white);
+            EditorGUI.DrawRect(new UnityEngine.Rect(centerPosition.center, new UnityEngine.Vector2(1, vector.magnitude * radius)), Color.white);
             GUI.matrix = Matrix4x4.identity;
 
-            Vector2 rectPosition = centerPosition.center + vector * radius - new Vector2(0.05f, 0.05f) * radius;
-            EditorGUI.DrawRect(new Rect(rectPosition, new Vector2(0.1f, 0.1f) * radius), Color.red);
+            UnityEngine.Vector2 rectPosition = centerPosition.center + vector * radius - new UnityEngine.Vector2(0.05f, 0.05f) * radius;
+            EditorGUI.DrawRect(new UnityEngine.Rect(rectPosition, new UnityEngine.Vector2(0.1f, 0.1f) * radius), Color.red);
 
             vector.y *= -1;
 

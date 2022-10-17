@@ -9,7 +9,7 @@ namespace Runtime.SourceModules.ExternalForce
     {
         [SerializeField]
         [Direction(normalized = true)]
-        private Vector2 direction;
+        private UnityEngine.Vector2 direction;
 
         [SerializeField]
         [Min(0f)]

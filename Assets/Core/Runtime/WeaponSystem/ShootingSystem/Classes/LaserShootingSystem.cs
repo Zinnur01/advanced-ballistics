@@ -17,7 +17,7 @@ public class LaserShootingSystem : MonoBehaviour
             {
                 if (hitInfo.transform.TryGetComponent<IDamageable>(out IDamageable damageable))
                 {
-                    damageable.Damage(hitInfo.point, 2f);
+                    damageable.Damage(hitInfo.point, 1f);
                 }
             }
         }

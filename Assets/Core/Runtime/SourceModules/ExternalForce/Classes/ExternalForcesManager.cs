@@ -9,9 +9,12 @@ namespace Runtime.SourceModules.ExternalForce
 
         public void Impact(ref Vector3 velocity, float deltaTime)
         {
-            for (int i = 0; i < forces.Length; i++)
+            if (forces != null)
             {
-                forces[i].Impact(ref velocity, deltaTime);
+                for (int i = 0; i < forces.Length; i++)
+                {
+                    forces[i].Impact(ref velocity, deltaTime);
+                }
             }
         }
     }
