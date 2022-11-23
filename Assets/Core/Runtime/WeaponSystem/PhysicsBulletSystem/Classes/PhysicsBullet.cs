@@ -42,7 +42,6 @@ public class PhysicsBullet : PoolObject
 
         ExternalForcesManager.Instance.Impact(ref velocity, Time.fixedDeltaTime);
 
-
         _transform.Translate(velocity * Time.fixedDeltaTime, Space.World);
 
         if (PhysicsExtension.LinecastBoth(lastPosition, _transform.position, out RaycastBothHit bothHitInfo))
@@ -50,32 +49,32 @@ public class PhysicsBullet : PoolObject
             _transform.position = bothHitInfo.inHit.point;
             Debug.DrawLine(lastPosition, _transform.position, GetVelocityColor(), 10);
 
-            foreach (Collider collider in UnityEngine.Physics.OverlapSphere(bothHitInfo.inHit.point, .2f))
+            //foreach (Collider collider in UnityEngine.Physics.OverlapSphere(bothHitInfo.inHit.point, .2f))
+            //{
+            //    if (collider.TryGetComponent<Rigidbody>(out Rigidbody rb))
+            //    {
+            //        rb.isKinematic = false;
+            //        rb.AddExplosionForce(200, bothHitInfo.inHit.point, 1f);
+            //    }
+            //}
+
+            if (bothHitInfo.inHit.transform.TryGetComponent<Rigidbody>(out Rigidbody rb))
             {
-                if (collider.TryGetComponent<Rigidbody>(out Rigidbody rb))
+                rb.isKinematic = false;
+                rb.AddForce(velocity);
+            }
+            else
+            {
+                if (bothHitInfo.inHit.transform.TryGetComponent<IDamageable>(out IDamageable damageable))
                 {
-                    rb.isKinematic = false;
-                    rb.AddExplosionForce(200, bothHitInfo.inHit.point, 1f);
+                    //damageable.Damage(bothHitInfo.inHit.point, 1f);
+                    damageable.Damage(bothHitInfo.inHit);
+                }
+                else
+                {
+                    CreateDecal(bothHitInfo.inHit);
                 }
             }
-
-
-            //if (bothHitInfo.inHit.transform.TryGetComponent<Rigidbody>(out Rigidbody rb))
-            //{
-            //    rb.isKinematic = false;
-            //    rb.AddForce(velocity);
-            //}
-            //else
-            //{
-            //    if (bothHitInfo.inHit.transform.TryGetComponent<IDamageable>(out IDamageable damageable))
-            //    {
-            //        damageable.Damage(bothHitInfo.inHit.point, 1f);
-            //    }
-            //    else
-            //    {
-            //        CreateDecal(bothHitInfo.inHit);
-            //    }
-            //}
 
             if (!Through(bothHitInfo))
             {

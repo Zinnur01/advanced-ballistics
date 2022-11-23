@@ -191,7 +191,7 @@ public class Shatter : MonoBehaviour
             filter.sharedMesh.name = fragment.name;
 
             MeshRenderer renderer = fragment.GetComponent<MeshRenderer>();
-            renderer.sharedMaterial = new Material(Shader.Find("Standard"));
+            renderer.sharedMaterial = new Material(Shader.Find("Universal Render Pipeline/Lit"));
 
             MeshCollider collider = fragment.GetComponent<MeshCollider>();
             collider.sharedMesh = meshes[i];

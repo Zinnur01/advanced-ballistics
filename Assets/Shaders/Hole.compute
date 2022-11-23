@@ -1,0 +1,22 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSMain
+
+RWTexture2D<float4> Result;
+int positionX;
+int positionY;
+int size;
+
+[numthreads(8, 8, 1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+    int x = id.x;
+    int y = id.y;
+
+    float value = sqrt((x - positionX)*(x - positionX) + (y - positionY)*(y - positionY)) / size;
+    value = 1 - value;
+    value = max(value, 0);
+
+    value = pow(value, 2);
+
+    Result[id.xy] = float4(Result[id.xy].x + value, 0, 0, 0.0);
+}
