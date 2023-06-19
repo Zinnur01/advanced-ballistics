@@ -101,14 +101,9 @@ public class PhysicsBullet : PoolObject
                 // Stopping force of the surface.
                 velocity += -velocity.normalized * neededBulletPenetrationForce;
 
-                // Deflection of the bullet from the motion vector.
-                float k = (180 - Vector3.Angle(velocity, bothHit.inHit.normal)) / 90f;
-                //float deflectionForce = k * neededBulletPenetrationForce;
-                float deflectionForce = neededBulletPenetrationForce / Mathf.Cos(Vector3.Angle(velocity, bothHit.inHit.normal) * Mathf.Deg2Rad);
-
-                if (deflectionForce < velocity.magnitude)
+                if (neededBulletPenetrationForce < velocity.magnitude)
                 {
-                    velocity += Random.insideUnitSphere * (deflectionForce / 10f);
+                    velocity += Random.insideUnitSphere * (neededBulletPenetrationForce / 10f);
                 }
                 else
                 {
