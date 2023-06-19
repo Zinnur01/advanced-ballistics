@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa53cb2e49c034648a3fb589767decd2, type: 3}
   m_Name: Wind
   m_EditorClassIdentifier: 
-  direction: {x: -0.11914523, y: -0.9928769}
+  direction: {x: -0.9626824, y: 0.2706336}
   force: 5

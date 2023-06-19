@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraMovement : MonoBehaviour
@@ -8,7 +6,7 @@ public class CameraMovement : MonoBehaviour
     private Transform cameraHinge;
 
     [SerializeField]
-    private UnityEngine.Vector2 sensetivity;
+    private Vector2 sensetivity;
 
     // Stored required properties.
     private float yAxis;

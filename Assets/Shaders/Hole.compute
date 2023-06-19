@@ -1,5 +1,5 @@
 // Each #kernel tells which function to compile; you can have many kernels
-#pragma kernel CSMain
+#pragma kernel Compute
 
 RWTexture2D<float4> Result;
 int positionX;
@@ -7,7 +7,7 @@ int positionY;
 int size;
 
 [numthreads(8, 8, 1)]
-void CSMain (uint3 id : SV_DispatchThreadID)
+void Compute (uint3 id : SV_DispatchThreadID)
 {
     int x = id.x;
     int y = id.y;

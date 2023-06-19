@@ -4,6 +4,6 @@ namespace Runtime.SourceModules.ExternalForce
 {
     public abstract class ExternalForce : ScriptableObject
     {
-        public abstract void Impact(ref Vector3 velocity, float deltaTime);
+        public abstract void Compute(ref Vector3 velocity, float deltaTime);
     }
 }

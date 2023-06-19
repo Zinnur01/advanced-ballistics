@@ -26,6 +26,11 @@ public class BreakableWall : MonoBehaviour, IDamageable
 
     }
 
+    public void Damage()
+    {
+        throw new System.NotImplementedException();
+    }
+
     private void CreateParts(Transform transform, Vector3 point, float radius)
     {
         Vector3 side = new Vector3(Mathf.Sign(point.x - transform.position.x), Mathf.Sign(point.y - transform.position.y), Mathf.Sign(point.z - transform.position.z));

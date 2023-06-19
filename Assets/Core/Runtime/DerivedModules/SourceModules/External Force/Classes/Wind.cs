@@ -17,7 +17,7 @@ namespace Runtime.SourceModules.ExternalForce
 
         private Vector3 velocity => new Vector3(direction.x, 0, direction.y) * force;
 
-        public override void Impact(ref Vector3 velocity, float deltaTime)
+        public override void Compute(ref Vector3 velocity, float deltaTime)
         {
             velocity += this.velocity * deltaTime;
         }

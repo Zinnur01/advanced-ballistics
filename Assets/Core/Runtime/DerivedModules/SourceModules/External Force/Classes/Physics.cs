@@ -8,7 +8,7 @@ namespace Runtime.SourceModules.ExternalForce
         [SerializeField]
         private float multiplier = 1f;
 
-        public override void Impact(ref Vector3 velocity, float deltaTime)
+        public override void Compute(ref Vector3 velocity, float deltaTime)
         {
             velocity += UnityEngine.Physics.gravity * (multiplier * deltaTime);
         }

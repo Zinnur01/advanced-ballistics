@@ -5,12 +5,17 @@ using Random = UnityEngine.Random;
 
 public class PhysicsBullet : PoolObject
 {
+    private const float ricochetAngle = 30f;
+
     [SerializeField]
     [Suffix("m/s")]
     private int initialSpeed = 710;
 
     [SerializeField]
     private float mass = 0.0067f;
+
+    [SerializeField]
+    private float damage;
 
     [SerializeField]
     private PoolObject decalTemplate;
@@ -40,7 +45,7 @@ public class PhysicsBullet : PoolObject
     {
         lastPosition = _transform.position;
 
-        ExternalForcesManager.Instance.Impact(ref velocity, Time.fixedDeltaTime);
+        ExternalForcesManager.Instance.Compute(ref velocity, Time.fixedDeltaTime);
 
         _transform.Translate(velocity * Time.fixedDeltaTime, Space.World);
 
@@ -48,15 +53,6 @@ public class PhysicsBullet : PoolObject
         {
             _transform.position = bothHitInfo.inHit.point;
             Debug.DrawLine(lastPosition, _transform.position, GetVelocityColor(), 10);
-
-            //foreach (Collider collider in UnityEngine.Physics.OverlapSphere(bothHitInfo.inHit.point, .2f))
-            //{
-            //    if (collider.TryGetComponent<Rigidbody>(out Rigidbody rb))
-            //    {
-            //        rb.isKinematic = false;
-            //        rb.AddExplosionForce(200, bothHitInfo.inHit.point, 1f);
-            //    }
-            //}
 
             if (bothHitInfo.inHit.transform.TryGetComponent<Rigidbody>(out Rigidbody rb))
             {
@@ -67,7 +63,6 @@ public class PhysicsBullet : PoolObject
             {
                 if (bothHitInfo.inHit.transform.TryGetComponent<IDamageable>(out IDamageable damageable))
                 {
-                    //damageable.Damage(bothHitInfo.inHit.point, 1f);
                     damageable.Damage(bothHitInfo.inHit);
                 }
                 else
@@ -78,12 +73,10 @@ public class PhysicsBullet : PoolObject
 
             if (!Through(bothHitInfo))
             {
-                Ricochet(bothHitInfo);
-            }
-
-            if (velocity.sqrMagnitude < 1f)
-            {
-                Push();
+                if (Ricochet(bothHitInfo) && velocity.sqrMagnitude < 1f)
+                {
+                    Push();
+                }
             }
         }
         else
@@ -110,7 +103,8 @@ public class PhysicsBullet : PoolObject
 
                 // Deflection of the bullet from the motion vector.
                 float k = (180 - Vector3.Angle(velocity, bothHit.inHit.normal)) / 90f;
-                float deflectionForce = k * neededBulletPenetrationForce;
+                //float deflectionForce = k * neededBulletPenetrationForce;
+                float deflectionForce = neededBulletPenetrationForce / Mathf.Cos(Vector3.Angle(velocity, bothHit.inHit.normal) * Mathf.Deg2Rad);
 
                 if (deflectionForce < velocity.magnitude)
                 {
@@ -134,19 +128,21 @@ public class PhysicsBullet : PoolObject
         return true;
     }
 
-    private void Ricochet(RaycastBothHit bothHit)
+    private bool Ricochet(RaycastBothHit bothHit)
     {
         _transform.position = bothHit.inHit.point;
         velocity = Vector3.Reflect(velocity, bothHit.inHit.normal);
 
         float angle = Vector3.Angle(velocity, bothHit.inHit.normal);
-        if (angle < 30f)
+        if (angle < ricochetAngle)
         {
             Push();
+            return false;
         }
         else
         {
             velocity *= (angle / 90f) / 5f;
+            return true;
         }
     }
 

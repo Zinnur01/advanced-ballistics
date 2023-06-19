@@ -43,10 +43,8 @@ namespace csDelaunay
 			Init(points, plotBounds);
 		}
 
-		public Voronoi(List<Vector2> points, Rect plotBounds, int lloydIterations)
+		public Voronoi(List<Vector2> points, Rect plotBounds, int lloydIterations) : this(points, plotBounds)
 		{
-			weigthDistributor = new System.Random();
-			Init(points, plotBounds);
 			LloydRelaxation(lloydIterations);
 		}
 
@@ -113,19 +111,11 @@ namespace csDelaunay
 		{
 			return LineSegment.VisibleLineSegments(Edge.SelectEdgesForSitePoint(coord, edges));
 		}
-		/*
-		public List<LineSegment> DelaunayLinesForSite(Vector2f coord) {
-			return DelaunayLinesForEdges(Edge.SelectEdgesForSitePoint(coord, edges));
-		}*/
 
 		public List<LineSegment> VoronoiDiagram()
 		{
 			return LineSegment.VisibleLineSegments(edges);
 		}
-		/*
-		public List<LineSegment> Hull() {
-			return DelaunayLinesForEdges(HullEdges());
-		}*/
 
 		public List<Edge> HullEdges()
 		{
@@ -194,8 +184,7 @@ namespace csDelaunay
 					newIntStar = heap.Min();
 				}
 
-				if (newSite != null &&
-					(heap.Empty() || CompareByYThenX(newSite, newIntStar) < 0))
+				if (newSite != null && (heap.Empty() || CompareByYThenX(newSite, newIntStar) < 0))
 				{
 					// New site is smallest
 					//Debug.Log("smallest: new site " + newSite);

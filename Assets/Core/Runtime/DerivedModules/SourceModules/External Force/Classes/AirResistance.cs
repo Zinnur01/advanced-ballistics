@@ -8,7 +8,7 @@ namespace Runtime.SourceModules.ExternalForce
         [SerializeField]
         private float ratio = 0.1f;
 
-        public override void Impact(ref Vector3 velocity, float deltaTime)
+        public override void Compute(ref Vector3 velocity, float deltaTime)
         {
             velocity += -velocity * (deltaTime * ratio);
         }

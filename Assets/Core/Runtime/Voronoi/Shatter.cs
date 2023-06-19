@@ -1,7 +1,6 @@
 using ApexInspector;
 using csDelaunay;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -20,7 +19,11 @@ public class Shatter : MonoBehaviour
     private float depth = .1f;
 
     [SerializeField]
+    [MinMaxSlider(0f, 1f)]
     private float previewSize = 1f;
+
+    [SerializeField]
+    private bool drawPattern;
 
     // Stored required properties.
     private Voronoi voronoi;
@@ -57,19 +60,18 @@ public class Shatter : MonoBehaviour
 
         for (int i = 0; i < regions.Count; i++)
         {
-            Mesh mesh = null;
             Vector3 pivot = Vector3.zero;
 
-            CreateMesh(ref mesh, ref pivot, regions[i], depth);
+            Mesh mesh = CreateMesh(ref pivot, regions[i], depth);
 
             meshes[i] = mesh;
             pivots[i] = pivot;
         }
     }
 
-    private void CreateMesh(ref Mesh mesh, ref Vector3 pivot, List<Vector2> region, float depth)
+    private Mesh CreateMesh(ref Vector3 pivot, List<Vector2> region, float depth)
     {
-        mesh = new Mesh();
+        Mesh mesh = new Mesh();
 
         float halfDepth = depth * .5f;
 
@@ -106,51 +108,6 @@ public class Shatter : MonoBehaviour
             Triangulation.SplitTriangles(Triangulation.TriangulateConvexPolygon(points), ref vertices, ref triangles);
         }
 
-
-        //Vector3[] vertices = new Vector3[region.Count * 4];
-        //for (int i = 0; i < region.Count; i++)
-        //{
-        //    int invIndex = region.Count - i - 1;
-        //    vertices[i] = new Vector3(region[i].x, region[i].y, halfDepth);
-        //    vertices[region.Count + i] = new Vector3(region[invIndex].x, region[invIndex].y, -halfDepth);
-        //}
-
-        //int triangleIndex = 0;
-        //int[] triangles = new int[(region.Count - 1) * 12];
-        //for (int i = 2; i < region.Count; i++)
-        //{
-        //    triangles[triangleIndex++] = 0;
-        //    triangles[triangleIndex++] = i - 1;
-        //    triangles[triangleIndex++] = i;
-
-        //    triangles[triangleIndex++] = region.Count;
-        //    triangles[triangleIndex++] = region.Count + i - 1;
-        //    triangles[triangleIndex++] = region.Count + i;
-        //}
-
-        //int halfVertCount = region.Count * 2;
-
-        //for (int i = 0; i < halfVertCount; i++)
-        //{
-        //    vertices[halfVertCount + i] = vertices[i];
-        //}
-
-        //for (int i = 0; i < region.Count; i++)
-        //{
-        //    int aa = halfVertCount + i;
-        //    int ab = halfVertCount + (i + 1) % region.Count;
-        //    int ba = halfVertCount + InvertIndex(i, region.Count);
-        //    int bb = halfVertCount + InvertIndex((i + 1) % region.Count, region.Count);
-
-        //    triangles[triangleIndex++] = aa;
-        //    triangles[triangleIndex++] = ba;
-        //    triangles[triangleIndex++] = bb;
-
-        //    triangles[triangleIndex++] = aa;
-        //    triangles[triangleIndex++] = bb;
-        //    triangles[triangleIndex++] = ab;
-        //}
-
         for (int i = 0; i < vertices.Count; i++)
         {
             pivot += vertices[i];
@@ -164,6 +121,7 @@ public class Shatter : MonoBehaviour
         mesh.vertices = vertices.ToArray();
         mesh.triangles = triangles.ToArray();
         mesh.RecalculateNormals();
+        return mesh;
     }
 
     private GameObject[] CreateFragments()
@@ -191,7 +149,7 @@ public class Shatter : MonoBehaviour
             filter.sharedMesh.name = fragment.name;
 
             MeshRenderer renderer = fragment.GetComponent<MeshRenderer>();
-            renderer.sharedMaterial = new Material(Shader.Find("Universal Render Pipeline/Lit"));
+            renderer.sharedMaterial = new Material(Shader.Find("HDRP/Lit"));
 
             MeshCollider collider = fragment.GetComponent<MeshCollider>();
             collider.sharedMesh = meshes[i];
@@ -248,9 +206,10 @@ public class Shatter : MonoBehaviour
 
     private void OnDrawGizmos()
     {
+        Gizmos.color = Color.black;
         Gizmos.DrawWireCube(transform.position, new Vector3(size.x, size.y, depth));
 
-        if (voronoi != null)
+        if (drawPattern && voronoi != null)
         {
             Gizmos.color = Color.blue;
             foreach (var item in voronoi.SitesIndexedByLocation)
@@ -259,7 +218,7 @@ public class Shatter : MonoBehaviour
                 Gizmos.DrawSphere(transform.position + point, 0.01f);
             }
 
-            Gizmos.color = Color.white;
+            Gizmos.color = Color.black;
             foreach (Edge edge in voronoi.Edges)
             {
                 if (edge.ClippedEnds == null) continue;

@@ -61,7 +61,7 @@ namespace Editor.Attributes
 
 
             GUIUtility.RotateAroundPivot(Mathf.Atan2(-vector.x, vector.y) * Mathf.Rad2Deg, centerPosition.center);
-            EditorGUI.DrawRect(new UnityEngine.Rect(centerPosition.center, new UnityEngine.Vector2(1, vector.magnitude * radius)), Color.white);
+            EditorGUI.DrawRect(new UnityEngine.Rect(centerPosition.center, new UnityEngine.Vector2(1, vector.magnitude * radius)), Color.black);
             GUI.matrix = Matrix4x4.identity;
 
             UnityEngine.Vector2 rectPosition = centerPosition.center + vector * radius - new UnityEngine.Vector2(0.05f, 0.05f) * radius;
